@@ -1,0 +1,42 @@
+# файл-сценарий вывода списка установленных программных продуктов в виде таблицы с полями Имя и Версия.
+Get-WmiObject -Class Win32_Product | Select-Object -Property Name, Version |Format-Table -AutoSize 
+# Используя скрипт (.ps1 файл) Просмотреть содержимое ветви реeстра HKCU
+ New-Item -Name task.ps1 -Path C:\DELET
+ Set-ExecutionPolicy Unrestricted -Scope Process 
+ C:\DELET\task.ps1
+ # Используя скрипт (.ps1 файл) с параметрами. Сохранить в текстовый файл на диске список из N запущенных(!) служб.
+ [CmdletBinding()]
+
+Param (
+[Parameter (Mandatory=$true, HelpMessage="Enter number")]
+[string] 
+$numder,
+
+[Parameter (Mandatory=$true, HelpMessage="Enter way")]
+[string]
+$way
+)
+
+Get-Service | Where-Object {$_.Status -eq "Running"} |Select-Object -First $numder | Out-File -FilePath $way
+ #Экспортировать в CSV список файлов в папке 
+ [CmdletBinding()]
+
+Param (
+[Parameter (Mandatory=$true, HelpMessage="Enter way")]
+[string]
+$way
+)
+  Get-ChildItem -Path $way | Export-Csv -Path $way
+  $imscv = Import-Csv -LiteralPath $way
+  
+  Get-PhysicalDisk | Export-Clixml -Path $way
+  $imxml = Import-Clixml $way
+  
+  Write-Host $imscv -ForegroundColor Blue
+
+  Write-Host $imxml -ForegroundColor DarkRed
+# Экспортировать в XML список файлов в папке
+Get-ChildItem -Path C:\DELET\wert.txt | Export-Clixml C:\DELET\new.xml 
+Get-ChildItem -Path C:\DELET\wert.txt | Export-Clixml c:\DELET\new.xml | Import-Clixml new.txt 
+
+ Get-Item C:\DELET\wert.txt | Select-Object -Property LastWriteTime
